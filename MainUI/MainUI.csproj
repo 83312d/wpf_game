@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{CD9E0607-946C-4F01-813B-27BF2198E385}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WPF_GAME</RootNamespace>
+    <RootNamespace>MainUI</RootNamespace>
     <AssemblyName>MainUI</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -33,6 +33,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WPF_GAME.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
