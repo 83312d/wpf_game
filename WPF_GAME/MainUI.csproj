@@ -7,7 +7,7 @@
     <ProjectGuid>{CD9E0607-946C-4F01-813B-27BF2198E385}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>WPF_GAME</RootNamespace>
-    <AssemblyName>WPF_GAME</AssemblyName>
+    <AssemblyName>MainUI</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
