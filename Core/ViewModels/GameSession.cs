@@ -9,7 +9,7 @@ namespace Core.ViewModels
 {
     public class GameSession
     {
-        private Player CurrentPlayer { get; set; }
+        public Player CurrentPlayer { get; set; }
 
         public GameSession()
         {
