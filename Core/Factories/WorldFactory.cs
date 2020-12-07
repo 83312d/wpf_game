@@ -59,8 +59,8 @@ namespace Core.Factories
             newWorld.AddLocation(
                 2, 
                 0, 
-                "Spider Forest",
-                "The trees in this forest are covered with spider webs.",
+                "Another Dimension",
+                "...",
                 "/Core;component/Art/Locations/Home.png"
             );
  
