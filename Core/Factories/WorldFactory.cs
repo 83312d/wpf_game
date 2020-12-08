@@ -23,6 +23,7 @@ namespace Core.Factories
                 "Strange place populated by Computers, Consoles and TV Fella", 
                 "/Core;component/Art/Locations/Home.png"
             );
+            newWorld.LocationAt(-1, -1).AvailableQuests.Add(QuestFactory.GetQuestById(1));
 
             newWorld.AddLocation(
                 -2,
@@ -31,8 +32,8 @@ namespace Core.Factories
                 "Where are piles of wood, boxes and other mysterious stuff abandoned here, with mighty winds howling between them. And also evil pigeons are here too...",
                 "/Core;component/Art/Locations/Home.png"
             );
-            
-            newWorld.LocationAt(-1, -1).AvailableQuests.Add(QuestFactory.GetQuestById(1));
+            newWorld.LocationAt(-2, -1).AddMonster(1, 10);
+            newWorld.LocationAt(-2, -1).AddMonster(2, 1);
                 
             newWorld.AddLocation(
                 -1, 
@@ -65,6 +66,9 @@ namespace Core.Factories
                 "...",
                 "/Core;component/Art/Locations/Home.png"
             );
+            newWorld.LocationAt(2, 0).AddMonster(3, 10);
+            newWorld.LocationAt(2, 0).AddMonster(2, 1);
+            
  
             newWorld.AddLocation(
                 0, 
@@ -81,7 +85,8 @@ namespace Core.Factories
                     "Actually I like to drink water. But there are some evil spirits protecting it.",
                     "/Core;component/Art/Locations/Home.png"
             );
-            
+            newWorld.LocationAt(0, 2).AddMonster(2, 10);
+
             return newWorld;
         }
     }

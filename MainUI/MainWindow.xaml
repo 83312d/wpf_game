@@ -3,11 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Core.ViewModels;assembly=Core"
+        d:DataContext="{d:DesignInstance viewModels:GameSession}"
         mc:Ignorable="d"
         Title="Captain Shafto and Bunch of Rooms" Height="768" Width="1024">
     
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="CanMove"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>
 
     <Grid>
@@ -21,9 +23,11 @@
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        
+        <!-- MENU -->
         <Label Grid.Row="0" Grid.Column="0" Content="Menu" Background="AliceBlue"/>
         
+        <!-- STATS -->
         <Grid Grid.Row="1" Grid.Column="0" Background="Aquamarine">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -53,6 +57,7 @@
             <Label Grid.Row="5" Grid.Column="1" Content="{Binding CurrentPlayer.Level}"/>
         </Grid>
         
+        <!-- MAIN -->
         <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="Beige">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -64,6 +69,7 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             
+            <!-- LOCATION -->
             <Border Grid.Row="0" Grid.Column="1" BorderBrush="Gainsboro" BorderThickness="1">
                 <Grid Margin="3">
                     <Grid.RowDefinitions>
@@ -87,8 +93,38 @@
                                TextWrapping="Wrap"/>
                 </Grid>
             </Border>
+            
+            <Border Grid.Row="1" Grid.Column="1" Background="Gainsboro" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" 
+                               HorizontalAlignment="Center" 
+                               Height="Auto"
+                               Text="{Binding CurrentMonster.Name}"/>
+                    <Image Grid.Row="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Height="200"
+                           Width="200"
+                           Source="{Binding CurrentMonster.Picture}"/>
+                    <StackPanel Grid.Row="2"
+                                Visibility="{Binding HasMonster, Converter={StaticResource BoolToVis}}"
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <TextBlock>Current Hitpoints:</TextBlock>
+                        <TextBlock Text="{Binding CurrentMonster.HitPoints}"/>
+                    </StackPanel>
+                    
+                </Grid>
+            </Border>
         </Grid>
         
+        <!-- INVENTORY & JOURNAL -->
         <Grid Grid.Row="2" Grid.Column="0" Background="BurlyWood">
             <TabControl>
                 
@@ -113,6 +149,7 @@
             </TabControl>
         </Grid>
         
+        <!-- MOVEMENT -->
         <Grid Grid.Row="2" Grid.Column="1" Background="Lavender">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -137,16 +174,16 @@
                 
                 <Button Grid.Row="0" Grid.Column="1" Height="50" Width="50" Margin="10" Content="North"
                         Click="OnClick_GoNorth"
-                        Visibility="{Binding HasNorthLocation , Converter={StaticResource CanMove}}"/>
+                        Visibility="{Binding HasNorthLocation , Converter={StaticResource BoolToVis}}"/>
                 <Button Grid.Row="1" Grid.Column="0" Height="50" Width="50" Margin="10" Content="West"
                         Click="OnClick_GoWest"
-                        Visibility="{Binding HasWestLocation , Converter={StaticResource CanMove}}"/>
+                        Visibility="{Binding HasWestLocation , Converter={StaticResource BoolToVis}}"/>
                 <Button Grid.Row="1" Grid.Column="2" Height="50" Width="50" Margin="10" Content="East"
                         Click="OnClick_GoEast"
-                        Visibility="{Binding HasEastLocation , Converter={StaticResource CanMove}}"/>
+                        Visibility="{Binding HasEastLocation , Converter={StaticResource BoolToVis}}"/>
                 <Button Grid.Row="2" Grid.Column="1" Height="50" Width="50" Margin="10" Content="South"
                         Click="OnClick_GoSouth"
-                        Visibility="{Binding HasSouthLocation , Converter={StaticResource CanMove}}"/>
+                        Visibility="{Binding HasSouthLocation , Converter={StaticResource BoolToVis}}"/>
             </Grid>
         </Grid>
     </Grid>

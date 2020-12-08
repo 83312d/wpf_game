@@ -7,8 +7,14 @@ namespace Core.ViewModels
     public class GameSession : BaseClass
     {
         private Location _currentLocation;
+        private Monster _currentMonster;
         public World World { get; set; }
         public Player CurrentPlayer { get; set; }
+        public bool HasMonster => CurrentMonster != null;
+        public bool HasNorthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis + 1) != null;
+        public bool HasEastLocation => World.LocationAt(CurrentLocation.XAxis + 1, CurrentLocation.YAxis) != null;
+        public bool HasWestLocation => World.LocationAt(CurrentLocation.XAxis - 1, CurrentLocation.YAxis) != null;
+        public bool HasSouthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis - 1) != null;
 
         public GameSession()
         {
@@ -30,6 +36,18 @@ namespace Core.ViewModels
                 OnPropertyChanged(nameof(HasSouthLocation));
 
                 QuestAtLocation();
+                MonstersAtLocation();
+            }
+        }
+
+        public Monster CurrentMonster
+        {
+            get => _currentMonster;
+            set
+            {
+                _currentMonster = value;
+                OnPropertyChanged(nameof(CurrentMonster));
+                OnPropertyChanged(nameof(HasMonster));
             }
         }
 
@@ -89,11 +107,11 @@ namespace Core.ViewModels
                 }    
             }
         }
-        
-        public bool HasNorthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis + 1) != null;
-        public bool HasEastLocation => World.LocationAt(CurrentLocation.XAxis + 1, CurrentLocation.YAxis) != null;
-        public bool HasWestLocation => World.LocationAt(CurrentLocation.XAxis - 1, CurrentLocation.YAxis) != null;
-        public bool HasSouthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis - 1) != null;
+
+        private void MonstersAtLocation()
+        {
+            CurrentMonster = CurrentLocation.GetMonster();
+        }
 
         public enum Directions
         {
