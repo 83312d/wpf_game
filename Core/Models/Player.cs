@@ -1,4 +1,7 @@
-﻿namespace Core.Models
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace Core.Models
 {
     public class Player : BaseClass
     {
@@ -67,6 +70,15 @@
                 _gold = value;
                 OnPropertyChanged(nameof(Gold));
             }
+        }
+        
+        public ObservableCollection<Item> Inventory { get; set; }
+        public ObservableCollection<QuestStatus> Quests { get; set; }
+
+        public Player()
+        {
+            Inventory = new ObservableCollection<Item>();
+            Quests = new ObservableCollection<QuestStatus>();
         }
     }
 }

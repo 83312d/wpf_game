@@ -1,4 +1,5 @@
-﻿using Core.Models;
+﻿using System.Linq;
+using Core.Models;
 using Core.Factories;
 
 namespace Core.ViewModels
@@ -27,6 +28,8 @@ namespace Core.ViewModels
                 OnPropertyChanged(nameof(HasEastLocation));
                 OnPropertyChanged(nameof(HasWestLocation));
                 OnPropertyChanged(nameof(HasSouthLocation));
+
+                QuestAtLocation();
             }
         }
 
@@ -74,6 +77,17 @@ namespace Core.ViewModels
                 };
             
             return player;
+        }
+
+        private void QuestAtLocation()
+        {
+            foreach (var quest in CurrentLocation.AvailableQuests)
+            {
+                if (!CurrentPlayer.Quests.Any(q => q.CurrentQuest.Id == quest.Id))
+                {
+                    CurrentPlayer.Quests.Add(new QuestStatus(quest));
+                }    
+            }
         }
         
         public bool HasNorthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis + 1) != null;

@@ -31,6 +31,8 @@ namespace Core.Factories
                 "Where are piles of wood, boxes and other mysterious stuff abandoned here, with mighty winds howling between them. And also evil pigeons are here too...",
                 "/Core;component/Art/Locations/Home.png"
             );
+            
+            newWorld.LocationAt(-1, -1).AvailableQuests.Add(QuestFactory.GetQuestById(1));
                 
             newWorld.AddLocation(
                 -1, 

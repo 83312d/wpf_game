@@ -1,4 +1,6 @@
-﻿namespace Core.Models
+﻿using System.Collections.Generic;
+
+namespace Core.Models
 {
     public class Location
     {
@@ -7,5 +9,6 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public string Picture { get; set; }
+        public List<Quest> AvailableQuests { get; set; } = new List<Quest>();
     }
 }
