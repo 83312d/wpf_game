@@ -11,7 +11,9 @@ namespace Core.Factories
         static LootFactory()
         {
             StandartLoot.Add(new Weapon(1001, "Blunt Claws", 1, 1, 2));
-            StandartLoot.Add(new Weapon(1002, "Toothpick", 5, 2, 3));
+            StandartLoot.Add(new Weapon(1002, "Toothpick", 5, 2, 4));
+            StandartLoot.Add(new Weapon(1003, "Sharp Claws", 10, 4, 8));
+            StandartLoot.Add(new Weapon(1004, "Mighty KYCb", 50, 10, 20));
             StandartLoot.Add(new Item(0002, "Pigeon Fang", 5));
             StandartLoot.Add(new Item(0001, "Pigeon Feather", 1));
             StandartLoot.Add(new Item(0004, "Spirit Essence", 10));

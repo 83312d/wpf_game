@@ -16,6 +16,7 @@ namespace Core.ViewModels
         public Weapon CurrentWeapon { get; set; }
         public bool HasMonster => CurrentMonster != null;
         public bool HasNorthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis + 1) != null;
+
         public bool HasEastLocation => World.LocationAt(CurrentLocation.XAxis + 1, CurrentLocation.YAxis) != null;
         public bool HasWestLocation => World.LocationAt(CurrentLocation.XAxis - 1, CurrentLocation.YAxis) != null;
         public bool HasSouthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis - 1) != null;
@@ -45,6 +46,7 @@ namespace Core.ViewModels
                 OnPropertyChanged(nameof(HasSouthLocation));
 
                 QuestAtLocation();
+                CompleteQuestsAtLocation();
                 MonstersAtLocation();
             }
         }
@@ -124,6 +126,49 @@ namespace Core.ViewModels
             }
         }
 
+        private void CompleteQuestsAtLocation()
+        {
+            foreach (var quest in CurrentLocation.AvailableQuests)
+            {
+                QuestStatus questToComplete = CurrentPlayer.Quests.FirstOrDefault(
+                    q => q.CurrentQuest.Id == quest.Id && !q.IsComplete);
+
+                if (questToComplete != null)
+                {
+                    if (CurrentPlayer.HasAllNeededItems(quest.ItemsForCompletion))
+                    {
+                        foreach (var itemQuantity in quest.ItemsForCompletion)
+                        {
+                            for (int i = 0; i < itemQuantity.Quantity; i++)
+                            {
+                                CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.Inventory.First(item => 
+                                    item.ItemTypeID == itemQuantity.ItemID));
+                            }
+                        }
+                        
+                        RaiseMessage("");
+                        RaiseMessage("Hooray! You fulfilled your destiny!");
+                        RaiseMessage($"Epic quest \"{quest.Name}\" complete!");
+
+                        CurrentPlayer.ExperiencePoints += quest.RewardXP;
+                        RaiseMessage($"You receive {quest.RewardXP} experience points");
+                        CurrentPlayer.Hairballs += quest.RewardHairballs;
+                        RaiseMessage($"You receive {quest.RewardHairballs} hairballs");
+
+                        foreach (var itemQuantity in quest.RewardLoot)
+                        {
+                            Item item = LootFactory.CreateLoot(itemQuantity.ItemID);
+                            
+                            CurrentPlayer.AddItemToInventory(item);
+                            RaiseMessage($"You receive {item.Name}");
+                        }
+
+                        questToComplete.IsComplete = true;
+                    }
+                }
+            }
+        }
+
         private void MonstersAtLocation()
         {
             CurrentMonster = CurrentLocation.GetMonster();
@@ -170,7 +215,7 @@ namespace Core.ViewModels
                 {
                     Item item = LootFactory.CreateLoot(itemQuantity.ItemID);
                     CurrentPlayer.AddItemToInventory(item);
-                    RaiseMessage($"You recieved {itemQuantity.Quantity} {item.Name}");
+                    RaiseMessage($"You received {itemQuantity.Quantity} {item.Name}");
                 }
                 
                 MonstersAtLocation();
@@ -192,14 +237,16 @@ namespace Core.ViewModels
                 if (CurrentPlayer.HitPoints <= 0)
                 {
                     RaiseMessage("Oh, no!");
-                    RaiseMessage($"The {CurrentMonster.Name} defeats you!");
+                    RaiseMessage($"The {CurrentMonster.Name} defeats you...");
 
                     CurrentLocation = World.LocationAt(0, -1);
                     CurrentPlayer.HitPoints = CurrentPlayer.Level * 10;
                     
                     if (CurrentPlayer.Hairballs < 0)
                     {
-                        CurrentPlayer.Hairballs -= GodOfRandom.NumberBetween(0, CurrentPlayer.Hairballs);
+                        int lostHairballs = GodOfRandom.NumberBetween(0, CurrentPlayer.Hairballs);
+                        CurrentPlayer.Hairballs -= lostHairballs;
+                        RaiseMessage($"You lose {lostHairballs} hairballs :(");
                     }
                 }
             }

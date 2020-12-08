@@ -88,5 +88,19 @@ namespace Core.Models
             Inventory.Add(item);
             OnPropertyChanged(nameof(Weapons));
         }
+
+        public void RemoveItemFromInventory(Item item)
+        {
+            Inventory.Remove(item);
+            
+            OnPropertyChanged(nameof(Weapons));
+        }
+
+        public bool HasAllNeededItems(List<ItemQuantity> items)
+        {
+            return items.All(item => 
+                Inventory.Count(i => 
+                    i.ItemTypeID == item.ItemID) >= item.Quantity);
+        }
     }
 }

@@ -13,8 +13,8 @@ namespace Core.Factories
             List<ItemQuantity> itemsToCompletion = new List<ItemQuantity>();
             List<ItemQuantity> rewardLoot = new List<ItemQuantity>();
             
-            itemsToCompletion.Add(new ItemQuantity(1002, 5));
-            rewardLoot.Add(new ItemQuantity(0002, 1));
+            itemsToCompletion.Add(new ItemQuantity(0001, 5));
+            rewardLoot.Add(new ItemQuantity(1002, 1));
             
             _quests.Add(new Quest(
                     1,
