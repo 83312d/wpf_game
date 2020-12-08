@@ -14,6 +14,7 @@ namespace Core.Models
             somePlace.Name = name;
             somePlace.Description = description;
             somePlace.Picture = picture;
+            somePlace.Picture = $"/Core;component/Art/Locations/{picture}";
             
             locations.Add(somePlace);
         }

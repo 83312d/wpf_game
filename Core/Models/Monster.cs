@@ -17,18 +17,22 @@ namespace Core.Models
                 OnPropertyChanged(nameof(HitPoints));
             }
         }
+        public int MinDamage { get; set; }
+        public int MaxDamage { get; set; }
         public int RewardXP { get; private set; }
-        public int RewardGold { get; private set; }
+        public int RewardHairballs { get; private set; }
         public ObservableCollection<ItemQuantity> Inventory { get; set; }
         
-        public Monster(string name, string picture, int maxHitPoints, int hitPoints, int rewardXp, int rewardGold)
+        public Monster(string name, string picture, int maxHitPoints, int hitPoints, int rewardXp, int rewardHairballs, int minDamage, int maxDamage)
         {
             Name = name;
-            Picture = picture;
+            Picture = $"/Core;component/Art/Monsters/{picture}";
             MaxHitPoints = maxHitPoints;
             HitPoints = hitPoints;
-            RewardGold = rewardGold;
+            RewardHairballs = rewardHairballs;
             RewardXP = rewardXp;
+            MinDamage = minDamage;
+            MaxDamage = maxDamage;
             
             Inventory = new ObservableCollection<ItemQuantity>();
         }

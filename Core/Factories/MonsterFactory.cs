@@ -14,8 +14,10 @@ namespace Core.Factories
                 case 1:
                     Monster pigeon = new Monster(
                         "Evil Pigeon", 
-                        "/Core;component/Art/Monsters/EvilPigeon.png", 
-                        4, 4, 5, 1
+                        "EvilPigeon.png", 
+                        4, 4, 
+                        5, 1,
+                        1, 2
                     );
 
                     AddLoot(pigeon, 0001, 75);
@@ -25,8 +27,10 @@ namespace Core.Factories
                 case 2:
                     Monster spirit = new Monster(
                         "Spirit",
-                        "/Core;component/Art/Monsters/Spirit.png",
-                        6, 6, 10, 2
+                        "Spirit.png",
+                        6, 6, 
+                        10, 2,
+                        2, 4
                     );
 
                     AddLoot(spirit, 0003, 75);
@@ -36,8 +40,10 @@ namespace Core.Factories
                 case 3:
                     Monster elevator = new Monster(
                         "Elevator",
-                        "/Core;component/Art/Monsters/Elevator.png", 
-                        20, 20, 20, 5
+                        "Elevator.png", 
+                        20, 20, 
+                        20, 5,
+                        2,10
                     );
 
                     AddLoot(elevator, 0005, 75);

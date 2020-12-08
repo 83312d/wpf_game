@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Core.EventArgs;
 using Core.Models;
 using Core.Factories;
 
@@ -6,10 +8,12 @@ namespace Core.ViewModels
 {
     public class GameSession : BaseClass
     {
+        public event EventHandler<MessagesEventArgs> OnMessageRaised;
         private Location _currentLocation;
         private Monster _currentMonster;
         public World World { get; set; }
         public Player CurrentPlayer { get; set; }
+        public Weapon CurrentWeapon { get; set; }
         public bool HasMonster => CurrentMonster != null;
         public bool HasNorthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis + 1) != null;
         public bool HasEastLocation => World.LocationAt(CurrentLocation.XAxis + 1, CurrentLocation.YAxis) != null;
@@ -21,6 +25,11 @@ namespace Core.ViewModels
             World = WorldFactory.CreateWorld();
             CurrentPlayer = SetPlayer();
             CurrentLocation = World.LocationAt(0, 0);
+
+            if (!CurrentPlayer.Weapons.Any())
+            {
+                CurrentPlayer.AddItemToInventory(LootFactory.CreateLoot(1001));
+            }
         }
         
         public Location CurrentLocation
@@ -48,6 +57,13 @@ namespace Core.ViewModels
                 _currentMonster = value;
                 OnPropertyChanged(nameof(CurrentMonster));
                 OnPropertyChanged(nameof(HasMonster));
+
+                if (CurrentMonster != null)
+                {
+                    RaiseMessage("");
+                    RaiseMessage("It's a trap!");
+                    RaiseMessage($"{CurrentMonster.Name} here!");
+                }
             }
         }
 
@@ -89,7 +105,7 @@ namespace Core.ViewModels
                     Name = "Shafto",
                     CharacterClass = "Pirate",
                     HitPoints = 10,
-                    Gold = 100,
+                    Hairballs = 100,
                     Level = 1,
                     ExperiencePoints = 0
                 };
@@ -111,6 +127,82 @@ namespace Core.ViewModels
         private void MonstersAtLocation()
         {
             CurrentMonster = CurrentLocation.GetMonster();
+        }
+
+        private void RaiseMessage(string message)
+        {
+            OnMessageRaised?.Invoke(this, new MessagesEventArgs(message));
+        }
+
+        public void AttackCurrentMonster()
+        {
+            if (CurrentWeapon == null)
+            {
+                RaiseMessage("Nothing to attack with! :(");
+                return;
+            }
+
+            int damageToMonster = GodOfRandom.NumberBetween(CurrentWeapon.MinDamage, CurrentWeapon.MaxDamage);
+
+            if (damageToMonster == 0)
+            {
+                RaiseMessage($"You missed!");
+            }
+            else
+            {
+                CurrentMonster.HitPoints -= damageToMonster;
+                RaiseMessage($"You hit the{CurrentMonster.Name} for {damageToMonster}");
+            }
+
+            if (CurrentMonster.HitPoints <= 0)
+            {
+                RaiseMessage("");
+                RaiseMessage("Victorious!");
+                RaiseMessage($"You defeated the {CurrentMonster.Name}");
+
+                CurrentPlayer.ExperiencePoints += CurrentMonster.RewardXP;
+                RaiseMessage($"You recived {CurrentMonster.RewardXP} expirience");
+
+                CurrentPlayer.Hairballs += CurrentMonster.RewardHairballs;
+                RaiseMessage($"You also find {CurrentMonster.RewardHairballs} hairballs!");
+
+                foreach (var itemQuantity in CurrentMonster.Inventory)
+                {
+                    Item item = LootFactory.CreateLoot(itemQuantity.ItemID);
+                    CurrentPlayer.AddItemToInventory(item);
+                    RaiseMessage($"You recieved {itemQuantity.Quantity} {item.Name}");
+                }
+                
+                MonstersAtLocation();
+            }
+            else
+            {
+                int damageToPlayer = GodOfRandom.NumberBetween(CurrentMonster.MinDamage, CurrentMonster.MaxDamage);
+
+                if (damageToPlayer == 0)
+                {
+                    RaiseMessage($"The {CurrentMonster.Name} misses you! Wow you are so fast!");
+                }
+                else
+                {
+                    CurrentPlayer.HitPoints -= damageToPlayer;
+                    RaiseMessage($"{CurrentMonster.Name} hits you for {damageToPlayer} points");
+                }
+
+                if (CurrentPlayer.HitPoints <= 0)
+                {
+                    RaiseMessage("Oh, no!");
+                    RaiseMessage($"The {CurrentMonster.Name} defeats you!");
+
+                    CurrentLocation = World.LocationAt(0, -1);
+                    CurrentPlayer.HitPoints = CurrentPlayer.Level * 10;
+                    
+                    if (CurrentPlayer.Hairballs < 0)
+                    {
+                        CurrentPlayer.Hairballs -= GodOfRandom.NumberBetween(0, CurrentPlayer.Hairballs);
+                    }
+                }
+            }
         }
 
         public enum Directions

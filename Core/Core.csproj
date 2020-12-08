@@ -39,6 +39,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="BaseClass.cs" />
+        <Compile Include="EventArgs\MessagesEventArgs.cs" />
         <Compile Include="Factories\LootFactory.cs" />
         <Compile Include="Factories\MonsterFactory.cs" />
         <Compile Include="Factories\QuestFactory.cs" />

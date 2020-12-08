@@ -13,7 +13,7 @@ namespace Core.Factories
                 -1, 
                 "Home", 
                 "Precious paper palace!", 
-                "/Core;component/Art/Locations/Home.png"
+                "Home.png"
             );
             
             newWorld.AddLocation(
@@ -21,8 +21,9 @@ namespace Core.Factories
                 -1, 
                 "Machines Domain", 
                 "Strange place populated by Computers, Consoles and TV Fella", 
-                "/Core;component/Art/Locations/Home.png"
+                "Home.png"
             );
+            
             newWorld.LocationAt(-1, -1).AvailableQuests.Add(QuestFactory.GetQuestById(1));
 
             newWorld.AddLocation(
@@ -30,8 +31,9 @@ namespace Core.Factories
                 -1,
                 "Balcony",
                 "Where are piles of wood, boxes and other mysterious stuff abandoned here, with mighty winds howling between them. And also evil pigeons are here too...",
-                "/Core;component/Art/Locations/Home.png"
+                "Home.png"
             );
+            
             newWorld.LocationAt(-2, -1).AddMonster(1, 10);
             newWorld.LocationAt(-2, -1).AddMonster(2, 1);
                 
@@ -40,7 +42,7 @@ namespace Core.Factories
                 0, 
                 "Meat Keeper",
                 "Big grey fella, with so many medals on his chest. And his sides too. He also likes to trade",
-                "/Core;component/Art/Locations/Home.png"
+                "Home.png"
             );
  
             newWorld.AddLocation(
@@ -48,7 +50,7 @@ namespace Core.Factories
                 0, 
                 "Central Square",
                 "Nice place to run. Run fast. BEHOLD OF TYGYDYK!",
-                "/Core;component/Art/Locations/Home.png"
+                "Home.png"
             );
  
             newWorld.AddLocation(
@@ -56,7 +58,7 @@ namespace Core.Factories
                 0, 
                 "Portal to another dimension",
                 "So many times I saw humans disappear behind it...",
-                "/Core;component/Art/Locations/Home.png"
+                "Home.png"
             );
  
             newWorld.AddLocation(
@@ -64,27 +66,28 @@ namespace Core.Factories
                 0, 
                 "Another Dimension",
                 "...",
-                "/Core;component/Art/Locations/Home.png"
+                "Home.png"
             );
+            
             newWorld.LocationAt(2, 0).AddMonster(3, 10);
             newWorld.LocationAt(2, 0).AddMonster(2, 1);
             
- 
             newWorld.AddLocation(
                 0, 
                 1, 
                 "Chinchilla's hut",
                 "Dat fella loves to trade some herbals for hairballs!",
-                "/Core;component/Art/Locations/Home.png"
+                "Home.png"
             );
  
             newWorld.AddLocation(
                     0, 
                     2, 
                     "Dark room with WATER",
-                    "Actually I like to drink water. But there are some evil spirits protecting it.",
-                    "/Core;component/Art/Locations/Home.png"
+                    "Actually I like to drink water, but there are some evil spirits protecting it.",
+                    "Home.png"
             );
+            
             newWorld.LocationAt(0, 2).AddMonster(2, 10);
 
             return newWorld;

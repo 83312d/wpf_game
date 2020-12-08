@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Core.Models
 {
@@ -10,7 +11,7 @@ namespace Core.Models
         private int _hitPoints;
         private int _level;
         private int _xPoints;
-        private int _gold;
+        private int _hairballs;
 
         public string Name
         {
@@ -62,23 +63,30 @@ namespace Core.Models
             }
         }
 
-        public int Gold
+        public int Hairballs
         {
-            get => _gold;
+            get => _hairballs;
             set
             {
-                _gold = value;
-                OnPropertyChanged(nameof(Gold));
+                _hairballs = value;
+                OnPropertyChanged(nameof(Hairballs));
             }
         }
         
         public ObservableCollection<Item> Inventory { get; set; }
+        public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
         public ObservableCollection<QuestStatus> Quests { get; set; }
 
         public Player()
         {
             Inventory = new ObservableCollection<Item>();
             Quests = new ObservableCollection<QuestStatus>();
+        }
+
+        public void AddItemToInventory(Item item)
+        {
+            Inventory.Add(item);
+            OnPropertyChanged(nameof(Weapons));
         }
     }
 }
