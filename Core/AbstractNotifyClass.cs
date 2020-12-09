@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Core
 {
-    public abstract class BaseClass : INotifyPropertyChanged
+    public abstract class AbstractNotifyClass : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

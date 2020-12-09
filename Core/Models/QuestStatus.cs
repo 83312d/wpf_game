@@ -2,7 +2,7 @@
 
 namespace Core.Models
 {
-    public class QuestStatus : BaseClass
+    public class QuestStatus : AbstractNotifyClass
     {
         public Quest CurrentQuest { get; set; }
         private bool _isComplete;

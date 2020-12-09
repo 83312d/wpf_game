@@ -15,33 +15,28 @@ namespace MainUI
 
         private void OnClick_Sell(object sender, RoutedEventArgs e)
         {
-            Item item = ((FrameworkElement)sender).DataContext as Item;
-
-            if (item != null)
+            if (((FrameworkElement)sender).DataContext is GroupedInventory groupedInventory)
             {
-                Session.CurrentPlayer.Hairballs += item.Price;
-                Session.CurrentTrader.AddItemToInventory(item);
-                Session.CurrentPlayer.RemoveItemFromInventory(item);
+                Session.CurrentPlayer.LoseHairballs(groupedInventory.Item.Price);
+                Session.CurrentTrader.AddItemToInventory(groupedInventory.Item);
+                Session.CurrentPlayer.RemoveItemFromInventory(groupedInventory.Item);
             }
         }
 
         private void OnClick_Buy(object sender, RoutedEventArgs e)
         {
-            Item item = ((FrameworkElement)sender).DataContext as Item;
-
-            if (item != null)
+            if (((FrameworkElement)sender).DataContext is GroupedInventory groupedInventory)
             {
-                if (Session.CurrentPlayer.Hairballs >= item.Price)
+                if (Session.CurrentPlayer.Hairballs >= groupedInventory.Item.Price)
                 {
-                    Session.CurrentPlayer.Hairballs -= item.Price;
-                    Session.CurrentPlayer.AddItemToInventory(item);
-                    Session.CurrentTrader.RemoveItemFromInventory(item);
+                    Session.CurrentPlayer.RecieveHairballs(groupedInventory.Item.Price);
+                    Session.CurrentPlayer.AddItemToInventory(groupedInventory.Item);
+                    Session.CurrentTrader.RemoveItemFromInventory(groupedInventory.Item);
                 }
                 else
                 {
                     MessageBox.Show("Not enough hairballs");
                 }
-                
             }
         }
 

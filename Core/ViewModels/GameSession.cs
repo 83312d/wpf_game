@@ -6,14 +6,31 @@ using Core.Factories;
 
 namespace Core.ViewModels
 {
-    public class GameSession : BaseClass
+    public class GameSession : AbstractNotifyClass
     {
         public event EventHandler<MessagesEventArgs> OnMessageRaised;
         private Location _currentLocation;
         private Monster _currentMonster;
         private Trader _currentTrader;
+        private Player _currentPlayer;
         public World World { get; set; }
-        public Player CurrentPlayer { get; set; }
+        public Player CurrentPlayer
+        {
+            get => _currentPlayer;
+            set
+            {
+                if (_currentPlayer != null)
+                {
+                    _currentPlayer.OnDefeat -= OnCurrentPlayerDefeat;
+                }
+                _currentPlayer = value;
+                if (_currentPlayer != null)
+                {
+                    _currentPlayer.OnDefeat += OnCurrentPlayerDefeat;
+                }                
+                
+            }
+        }
         public Weapon CurrentWeapon { get; set; }
         public bool HasMonster => CurrentMonster != null;
         public bool HasTrader => CurrentTrader != null;    
@@ -28,11 +45,6 @@ namespace Core.ViewModels
             World = WorldFactory.CreateWorld();
             CurrentPlayer = SetPlayer();
             CurrentLocation = World.LocationAt(0, 0);
-
-            if (!CurrentPlayer.Weapons.Any())
-            {
-                CurrentPlayer.AddItemToInventory(LootFactory.CreateLoot(1001));
-            }
         }
         
         public Location CurrentLocation
@@ -60,16 +72,23 @@ namespace Core.ViewModels
             get => _currentMonster;
             set
             {
+                if (_currentMonster != null)
+                {
+                    _currentMonster.OnDefeat -= OnCurrentMonsterDefeat;
+                }
+                
                 _currentMonster = value;
-                OnPropertyChanged(nameof(CurrentMonster));
-                OnPropertyChanged(nameof(HasMonster));
 
                 if (CurrentMonster != null)
                 {
+                    _currentMonster.OnDefeat += OnCurrentMonsterDefeat;
                     RaiseMessage("");
                     RaiseMessage("It's a trap!");
                     RaiseMessage($"{CurrentMonster.Name} here!");
                 }
+                
+                OnPropertyChanged(nameof(CurrentMonster));
+                OnPropertyChanged(nameof(HasMonster));
             }
         }
         
@@ -117,15 +136,16 @@ namespace Core.ViewModels
         
         private static Player SetPlayer()
         {
-            var player = new Player
-                {
-                    Name = "Shafto",
-                    CharacterClass = "Pirate",
-                    HitPoints = 10,
-                    Hairballs = 100,
-                    Level = 1,
-                    ExperiencePoints = 0
-                };
+            var player = new Player(
+                "Shafto",
+                "Pirate",
+                0,
+                10,
+                10,
+                100
+            );
+            
+            player.AddItemToInventory(LootFactory.CreateLoot(1001));
             
             return player;
         }
@@ -167,7 +187,7 @@ namespace Core.ViewModels
 
                         CurrentPlayer.ExperiencePoints += quest.RewardXP;
                         RaiseMessage($"You receive {quest.RewardXP} experience points");
-                        CurrentPlayer.Hairballs += quest.RewardHairballs;
+                        CurrentPlayer.RecieveHairballs(quest.RewardHairballs);
                         RaiseMessage($"You receive {quest.RewardHairballs} hairballs");
 
                         foreach (var itemQuantity in quest.RewardLoot)
@@ -210,29 +230,12 @@ namespace Core.ViewModels
             }
             else
             {
-                CurrentMonster.HitPoints -= damageToMonster;
                 RaiseMessage($"You hit the{CurrentMonster.Name} for {damageToMonster}");
+                CurrentMonster.TakeDamage(damageToMonster);
             }
 
-            if (CurrentMonster.HitPoints <= 0)
+            if (CurrentMonster.Defeated)
             {
-                RaiseMessage("");
-                RaiseMessage("Victorious!");
-                RaiseMessage($"You defeated the {CurrentMonster.Name}");
-
-                CurrentPlayer.ExperiencePoints += CurrentMonster.RewardXP;
-                RaiseMessage($"You recived {CurrentMonster.RewardXP} expirience");
-
-                CurrentPlayer.Hairballs += CurrentMonster.RewardHairballs;
-                RaiseMessage($"You also find {CurrentMonster.RewardHairballs} hairballs!");
-
-                foreach (var itemQuantity in CurrentMonster.Inventory)
-                {
-                    Item item = LootFactory.CreateLoot(itemQuantity.ItemID);
-                    CurrentPlayer.AddItemToInventory(item);
-                    RaiseMessage($"You received {itemQuantity.Quantity} {item.Name}");
-                }
-                
                 MonstersAtLocation();
             }
             else
@@ -245,25 +248,45 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    CurrentPlayer.HitPoints -= damageToPlayer;
                     RaiseMessage($"{CurrentMonster.Name} hits you for {damageToPlayer} points");
+                    CurrentPlayer.TakeDamage(damageToPlayer);
                 }
+            }
+        }
 
-                if (CurrentPlayer.HitPoints <= 0)
-                {
-                    RaiseMessage("Oh, no!");
-                    RaiseMessage($"The {CurrentMonster.Name} defeats you...");
+        private void OnCurrentPlayerDefeat(object sender, System.EventArgs eventArgs)
+        {
+            RaiseMessage("");
+            RaiseMessage("Oh, no!");
+            RaiseMessage($"The {CurrentMonster.Name} defeats you...");
 
-                    CurrentLocation = World.LocationAt(0, -1);
-                    CurrentPlayer.HitPoints = CurrentPlayer.Level * 10;
-                    
-                    if (CurrentPlayer.Hairballs < 0)
-                    {
-                        int lostHairballs = GodOfRandom.NumberBetween(0, CurrentPlayer.Hairballs);
-                        CurrentPlayer.Hairballs -= lostHairballs;
-                        RaiseMessage($"You lose {lostHairballs} hairballs :(");
-                    }
-                }
+            CurrentLocation = World.LocationAt(0, -1);
+            CurrentPlayer.Heal(CurrentPlayer.MaxHitPoints);
+            
+            if (CurrentPlayer.Hairballs < 0)
+            {
+                int lostHairballs = GodOfRandom.NumberBetween(0, CurrentPlayer.Hairballs);
+                CurrentPlayer.LoseHairballs(lostHairballs);
+                RaiseMessage($"You lose {lostHairballs} hairballs :(");
+            }
+        }
+        
+        private void OnCurrentMonsterDefeat(object sender, System.EventArgs eventArgs)
+        {
+            RaiseMessage("");
+            RaiseMessage("Victorious!");
+            RaiseMessage($"You defeated the {CurrentMonster.Name}");
+
+            RaiseMessage($"You recived {CurrentMonster.RewardXp} expirience");
+            CurrentPlayer.ExperiencePoints += CurrentMonster.RewardXp;
+
+            RaiseMessage($"You also find {CurrentMonster.Hairballs} hairballs!");
+            CurrentPlayer.RecieveHairballs(CurrentMonster.Hairballs);
+
+            foreach (var item in CurrentMonster.Inventory)
+            {
+                RaiseMessage($"You received {item.Name}");
+                CurrentPlayer.AddItemToInventory(item);
             }
         }
 

@@ -59,7 +59,7 @@ namespace Core.Factories
         {
             if (GodOfRandom.NumberBetween(1, 100) <= chance)
             {
-                monster.Inventory.Add(new ItemQuantity(itemId, 1));
+                monster.AddItemToInventory(LootFactory.CreateLoot(itemId));
             }
         }
     }

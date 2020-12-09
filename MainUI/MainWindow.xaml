@@ -48,7 +48,7 @@
             <Label Grid.Row="1" Grid.Column="0" Content="Class:"/>
             <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentPlayer.CharacterClass}"/>
             <Label Grid.Row="2" Grid.Column="0" Content="Hit Points:"/>
-            <Label Grid.Row="2" Grid.Column="1" Content="{Binding CurrentPlayer.HitPoints}"/>
+            <Label Grid.Row="2" Grid.Column="1" Content="{Binding CurrentPlayer.CurrentHitPoints}"/>
             <Label Grid.Row="3" Grid.Column="0" Content="Hairballs:"/>
             <Label Grid.Row="3" Grid.Column="1" Content="{Binding CurrentPlayer.Hairballs}"/>
             <Label Grid.Row="4" Grid.Column="0" Content="XP:"/>
@@ -137,7 +137,7 @@
                                 HorizontalAlignment="Center"
                                 Orientation="Horizontal">
                         <TextBlock>Current Hitpoints:</TextBlock>
-                        <TextBlock Text="{Binding CurrentMonster.HitPoints}"/>
+                        <TextBlock Text="{Binding CurrentMonster.CurrentHitPoints}"/>
                     </StackPanel>
                 </Grid>
                 
@@ -149,10 +149,11 @@
             <TabControl>
                 
                 <TabItem Header="Inventory">
-                    <DataGrid ItemsSource="{Binding CurrentPlayer.Inventory}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                    <DataGrid ItemsSource="{Binding CurrentPlayer.GroupedInventory}" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                            <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="Auto"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Item.Name}" Width="*"/>
+                            <DataGridTextColumn Header="#" IsReadOnly="True" Binding="{Binding Quantity}" Width="Auto"/>
+                            <DataGridTextColumn Header="Price" Binding="{Binding Item.Price}" Width="Auto"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>

@@ -1,29 +1,13 @@
-﻿using System.Collections.ObjectModel;
-
+﻿
 namespace Core.Models
 {
-    public class Trader : BaseClass
+    public class Trader : LivingBeing
     {
-        public string Name { get; set; }
         public int Id { get; set; }
         
-        public ObservableCollection<Item> Inventory { get; set; }
-
-        public Trader(string name, int id)
+        public Trader(string name, int id) : base(name, 9999, 9999, 9999)
         {
-            Name = name;
             Id = id;
-            Inventory = new ObservableCollection<Item>();
-        }
-
-        public void AddItemToInventory(Item item)
-        {
-            Inventory.Add(item);
-        }
-
-        public void RemoveItemFromInventory(Item item)
-        {
-            Inventory.Remove(item);
         }
     }
 }

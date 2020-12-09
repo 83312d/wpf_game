@@ -4,24 +4,11 @@ using System.Linq;
 
 namespace Core.Models
 {
-    public class Player : BaseClass
+    public class Player : LivingBeing
     {
-        private string _name;
         private string _characterClass;
-        private int _hitPoints;
         private int _level;
         private int _xPoints;
-        private int _hairballs;
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
-            }
-        }
 
         public string CharacterClass
         {
@@ -32,17 +19,6 @@ namespace Core.Models
                 OnPropertyChanged(nameof(CharacterClass));
             }
         }
-
-        public int HitPoints
-        {
-            get => _hitPoints;
-            set
-            {
-                _hitPoints = value;
-                OnPropertyChanged(nameof(HitPoints));
-            }
-        }
-
         public int ExperiencePoints
         {
             get => _xPoints;
@@ -52,7 +28,6 @@ namespace Core.Models
                 OnPropertyChanged(nameof(ExperiencePoints));
             }
         }
-
         public int Level
         {
             get => _level;
@@ -62,38 +37,14 @@ namespace Core.Models
                 OnPropertyChanged(nameof(Level));
             }
         }
-
-        public int Hairballs
-        {
-            get => _hairballs;
-            set
-            {
-                _hairballs = value;
-                OnPropertyChanged(nameof(Hairballs));
-            }
-        }
-        
-        public ObservableCollection<Item> Inventory { get; set; }
-        public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
         public ObservableCollection<QuestStatus> Quests { get; set; }
 
-        public Player()
+        public Player(string name, string characterClass, int xPoints, int maxHitPoints, int hitPoints, int hairballs) 
+            : base(name, maxHitPoints, hitPoints, hairballs)
         {
-            Inventory = new ObservableCollection<Item>();
+            CharacterClass = characterClass;
+            ExperiencePoints = xPoints;
             Quests = new ObservableCollection<QuestStatus>();
-        }
-
-        public void AddItemToInventory(Item item)
-        {
-            Inventory.Add(item);
-            OnPropertyChanged(nameof(Weapons));
-        }
-
-        public void RemoveItemFromInventory(Item item)
-        {
-            Inventory.Remove(item);
-            
-            OnPropertyChanged(nameof(Weapons));
         }
 
         public bool HasAllNeededItems(List<ItemQuantity> items)
