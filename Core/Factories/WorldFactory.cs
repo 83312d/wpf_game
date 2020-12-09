@@ -25,6 +25,7 @@ namespace Core.Factories
             );
             
             newWorld.LocationAt(-1, -1).AvailableQuests.Add(QuestFactory.GetQuestById(1));
+            newWorld.LocationAt(-1, -1).Trader = TraderFactory.GetTraderById(1);
 
             newWorld.AddLocation(
                 -2,
@@ -44,6 +45,9 @@ namespace Core.Factories
                 "Big grey fella, with so many medals on his chest. And his sides too. He also likes to trade",
                 "Home.png"
             );
+            
+            newWorld.LocationAt(-1, 0).Trader = TraderFactory.GetTraderById(2);
+
  
             newWorld.AddLocation(
                 0, 
@@ -79,6 +83,9 @@ namespace Core.Factories
                 "Dat fella loves to trade some herbals for hairballs!",
                 "Home.png"
             );
+            
+            newWorld.LocationAt(0, 1).Trader = TraderFactory.GetTraderById(3);
+
  
             newWorld.AddLocation(
                     0, 

@@ -11,10 +11,12 @@ namespace Core.ViewModels
         public event EventHandler<MessagesEventArgs> OnMessageRaised;
         private Location _currentLocation;
         private Monster _currentMonster;
+        private Trader _currentTrader;
         public World World { get; set; }
         public Player CurrentPlayer { get; set; }
         public Weapon CurrentWeapon { get; set; }
         public bool HasMonster => CurrentMonster != null;
+        public bool HasTrader => CurrentTrader != null;    
         public bool HasNorthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis + 1) != null;
 
         public bool HasEastLocation => World.LocationAt(CurrentLocation.XAxis + 1, CurrentLocation.YAxis) != null;
@@ -48,6 +50,8 @@ namespace Core.ViewModels
                 QuestAtLocation();
                 CompleteQuestsAtLocation();
                 MonstersAtLocation();
+                
+                CurrentTrader = CurrentLocation.Trader;
             }
         }
 
@@ -66,6 +70,17 @@ namespace Core.ViewModels
                     RaiseMessage("It's a trap!");
                     RaiseMessage($"{CurrentMonster.Name} here!");
                 }
+            }
+        }
+        
+        public Trader CurrentTrader
+        {
+            get => _currentTrader;
+            set
+            {
+                _currentTrader = value;
+                OnPropertyChanged(nameof(CurrentTrader));
+                OnPropertyChanged(nameof(HasTrader));
             }
         }
 

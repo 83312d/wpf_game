@@ -217,16 +217,28 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 
-                <Button Grid.Row="0" Grid.Column="1" Height="50" Width="50" Margin="10" Content="North"
+                <Button Grid.Row="0" Grid.Column="1" Height="50" Width="50" Margin="10" 
+                        Content="North"
                         Click="OnClick_GoNorth"
                         Visibility="{Binding HasNorthLocation , Converter={StaticResource BoolToVis}}"/>
-                <Button Grid.Row="1" Grid.Column="0" Height="50" Width="50" Margin="10" Content="West"
+                
+                <Button Grid.Row="1" Grid.Column="0" Height="50" Width="50" Margin="10" 
+                        Content="West"
                         Click="OnClick_GoWest"
                         Visibility="{Binding HasWestLocation , Converter={StaticResource BoolToVis}}"/>
-                <Button Grid.Row="1" Grid.Column="2" Height="50" Width="50" Margin="10" Content="East"
+                
+                <Button Grid.Row="1" Grid.Column="1" Height="50" Width="50" Margin="10" 
+                        Content="Trade"
+                        Click="OnClick_Trade"
+                        Visibility="{Binding HasTrader, Converter={StaticResource BoolToVis}}"/>
+                
+                <Button Grid.Row="1" Grid.Column="2" Height="50" Width="50" Margin="10" 
+                        Content="East"
                         Click="OnClick_GoEast"
                         Visibility="{Binding HasEastLocation , Converter={StaticResource BoolToVis}}"/>
-                <Button Grid.Row="2" Grid.Column="1" Height="50" Width="50" Margin="10" Content="South"
+                
+                <Button Grid.Row="2" Grid.Column="1" Height="50" Width="50" Margin="10" 
+                        Content="South"
                         Click="OnClick_GoSouth"
                         Visibility="{Binding HasSouthLocation , Converter={StaticResource BoolToVis}}"/>
             </Grid>

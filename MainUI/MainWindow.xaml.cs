@@ -2,6 +2,7 @@
 using System.Windows.Documents;
 using Core.EventArgs;
 using Core.ViewModels;
+using MainUI;
 
 namespace WPF_GAME
 {
@@ -47,6 +48,15 @@ namespace WPF_GAME
         private void OnClick_AttackMonster(object sender, RoutedEventArgs e)
         {
             _gameSession.AttackCurrentMonster();
+        }
+
+        private void OnClick_Trade(object sender, RoutedEventArgs e)
+        {
+            Trade tradeScreen = new Trade();
+            
+            tradeScreen.DataContext = _gameSession;
+            tradeScreen.Owner = this;
+            tradeScreen.ShowDialog();
         }
     }
 }

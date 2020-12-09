@@ -13,6 +13,7 @@ namespace Core.Models
         public string Picture { get; set; }
         public List<Quest> AvailableQuests { get; set; } = new List<Quest>();
         public List<MonsterEncounter> Monsters { get; set; } = new List<MonsterEncounter>();
+        public Trader Trader { get; set; }
 
         public void AddMonster(int monsterId, int chanceOfEncounter)
         {
