@@ -11,7 +11,7 @@
             set
             {
                 _item = value;
-                OnPropertyChanged(nameof(Item));
+                OnPropertyChanged();
             }
         }
 
@@ -21,7 +21,7 @@
             set
             {
                 _quantity = value;
-                OnPropertyChanged(nameof(Quantity));
+                OnPropertyChanged();
             }
         }
 

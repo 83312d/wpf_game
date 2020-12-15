@@ -11,6 +11,7 @@ namespace Core.Models
         private int _currentHitPoints;
         private int _maxHitPoints;
         private int _hairballs;
+        private int _level;
 
         public string Name
         {
@@ -18,7 +19,7 @@ namespace Core.Models
             private set
             {
                 _name = value;
-                OnPropertyChanged(nameof(Name));
+                OnPropertyChanged();
             }
         }
         public int Hairballs
@@ -27,7 +28,7 @@ namespace Core.Models
             private set
             {
                 _hairballs = value;
-                OnPropertyChanged(nameof(Hairballs));
+                OnPropertyChanged();
             }
         }
         public int CurrentHitPoints
@@ -36,30 +37,40 @@ namespace Core.Models
             private set
             {
                 _currentHitPoints = value;
-                OnPropertyChanged(nameof(CurrentHitPoints));
+                OnPropertyChanged();
             }
         }
         public int MaxHitPoints
         {
             get => _maxHitPoints;
-            private set
+            protected set
             {
                 _maxHitPoints = value;
-                OnPropertyChanged(nameof(MaxHitPoints));
+                OnPropertyChanged();
             }
         }
-        public ObservableCollection<Item> Inventory { get; set; }
-        public ObservableCollection<GroupedInventory> GroupedInventory { get; set; }
+        public int Level
+        {
+            get => _level;
+            protected set
+            {
+                _level = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<Item> Inventory { get; }
+        public ObservableCollection<GroupedInventory> GroupedInventory { get; }
         public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
         public bool Defeated => CurrentHitPoints <= 0;
         public event EventHandler OnDefeat;
 
-        protected LivingBeing(string name, int maxHitPoints, int currentHitPoints, int hairballs)
+        protected LivingBeing(string name, int maxHitPoints, int currentHitPoints, int hairballs, int level = 1)
         {
             Name = name;
             MaxHitPoints = maxHitPoints;
             CurrentHitPoints = currentHitPoints;
             Hairballs = hairballs;
+            Level = level;
             Inventory = new ObservableCollection<Item>();
             GroupedInventory = new ObservableCollection<GroupedInventory>();
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -7,7 +8,6 @@ namespace Core.Models
     public class Player : LivingBeing
     {
         private string _characterClass;
-        private int _level;
         private int _xPoints;
 
         public string CharacterClass
@@ -16,28 +16,22 @@ namespace Core.Models
             set
             {
                 _characterClass = value;
-                OnPropertyChanged(nameof(CharacterClass));
+                OnPropertyChanged();
             }
         }
         public int ExperiencePoints
         {
             get => _xPoints;
-            set
+            private set
             {
                 _xPoints = value;
-                OnPropertyChanged(nameof(ExperiencePoints));
-            }
-        }
-        public int Level
-        {
-            get => _level;
-            set
-            {
-                _level = value;
-                OnPropertyChanged(nameof(Level));
+                OnPropertyChanged();
+                SetLevel();
             }
         }
         public ObservableCollection<QuestStatus> Quests { get; set; }
+
+        public event EventHandler OnLevelUp;
 
         public Player(string name, string characterClass, int xPoints, int maxHitPoints, int hitPoints, int hairballs) 
             : base(name, maxHitPoints, hitPoints, hairballs)
@@ -52,6 +46,25 @@ namespace Core.Models
             return items.All(item => 
                 Inventory.Count(i => 
                     i.ItemTypeID == item.ItemID) >= item.Quantity);
+        }
+
+        public void AddXp(int amount)
+        {
+            ExperiencePoints += amount;
+        }
+
+        public void SetLevel()
+        {
+            int currentLevel = Level;
+            Level = (ExperiencePoints / 100) + 1;
+
+            if (Level != currentLevel)
+            {
+                MaxHitPoints = Level * 10;
+                Heal(MaxHitPoints);
+
+                OnLevelUp?.Invoke(this, System.EventArgs.Empty);
+            }
         }
     }
 }

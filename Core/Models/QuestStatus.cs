@@ -4,7 +4,7 @@ namespace Core.Models
 {
     public class QuestStatus : AbstractNotifyClass
     {
-        public Quest CurrentQuest { get; set; }
+        public Quest CurrentQuest { get; }
         private bool _isComplete;
 
         public bool IsComplete
@@ -13,7 +13,7 @@ namespace Core.Models
             set
             {
                 _isComplete = value;
-                OnPropertyChanged(nameof(IsComplete));
+                OnPropertyChanged();
             }
         }
 

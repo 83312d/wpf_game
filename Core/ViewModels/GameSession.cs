@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography;
 using Core.EventArgs;
 using Core.Models;
 using Core.Factories;
@@ -13,7 +15,7 @@ namespace Core.ViewModels
         private Monster _currentMonster;
         private Trader _currentTrader;
         private Player _currentPlayer;
-        public World World { get; set; }
+        public World World { get; }
         public Player CurrentPlayer
         {
             get => _currentPlayer;
@@ -21,14 +23,17 @@ namespace Core.ViewModels
             {
                 if (_currentPlayer != null)
                 {
+                    _currentPlayer.OnLevelUp -= OnCurrentPlayerLevelUp;
                     _currentPlayer.OnDefeat -= OnCurrentPlayerDefeat;
                 }
+                
                 _currentPlayer = value;
+                
                 if (_currentPlayer != null)
                 {
+                    _currentPlayer.OnLevelUp += OnCurrentPlayerLevelUp;
                     _currentPlayer.OnDefeat += OnCurrentPlayerDefeat;
                 }                
-                
             }
         }
         public Weapon CurrentWeapon { get; set; }
@@ -53,7 +58,7 @@ namespace Core.ViewModels
             set
             {
                 _currentLocation = value;
-                OnPropertyChanged(nameof(CurrentLocation));
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(HasNorthLocation));
                 OnPropertyChanged(nameof(HasEastLocation));
                 OnPropertyChanged(nameof(HasWestLocation));
@@ -87,7 +92,7 @@ namespace Core.ViewModels
                     RaiseMessage($"{CurrentMonster.Name} here!");
                 }
                 
-                OnPropertyChanged(nameof(CurrentMonster));
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(HasMonster));
             }
         }
@@ -98,7 +103,7 @@ namespace Core.ViewModels
             set
             {
                 _currentTrader = value;
-                OnPropertyChanged(nameof(CurrentTrader));
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(HasTrader));
             }
         }
@@ -154,7 +159,7 @@ namespace Core.ViewModels
         {
             foreach (var quest in CurrentLocation.AvailableQuests)
             {
-                if (!CurrentPlayer.Quests.Any(q => q.CurrentQuest.Id == quest.Id))
+                if (CurrentPlayer.Quests.All(q => q.CurrentQuest.Id != quest.Id))
                 {
                     CurrentPlayer.Quests.Add(new QuestStatus(quest));
                 }    
@@ -184,12 +189,12 @@ namespace Core.ViewModels
                         RaiseMessage("");
                         RaiseMessage("Hooray! You fulfilled your destiny!");
                         RaiseMessage($"Epic quest \"{quest.Name}\" complete!");
-
-                        CurrentPlayer.ExperiencePoints += quest.RewardXP;
                         RaiseMessage($"You receive {quest.RewardXP} experience points");
-                        CurrentPlayer.RecieveHairballs(quest.RewardHairballs);
                         RaiseMessage($"You receive {quest.RewardHairballs} hairballs");
-
+                        
+                        CurrentPlayer.AddXp(quest.RewardXP);
+                        CurrentPlayer.RecieveHairballs(quest.RewardHairballs);
+                        
                         foreach (var itemQuantity in quest.RewardLoot)
                         {
                             Item item = LootFactory.CreateLoot(itemQuantity.ItemID);
@@ -266,8 +271,8 @@ namespace Core.ViewModels
             if (CurrentPlayer.Hairballs < 0)
             {
                 int lostHairballs = GodOfRandom.NumberBetween(0, CurrentPlayer.Hairballs);
-                CurrentPlayer.LoseHairballs(lostHairballs);
                 RaiseMessage($"You lose {lostHairballs} hairballs :(");
+                CurrentPlayer.LoseHairballs(lostHairballs);
             }
         }
         
@@ -276,11 +281,10 @@ namespace Core.ViewModels
             RaiseMessage("");
             RaiseMessage("Victorious!");
             RaiseMessage($"You defeated the {CurrentMonster.Name}");
-
-            RaiseMessage($"You recived {CurrentMonster.RewardXp} expirience");
-            CurrentPlayer.ExperiencePoints += CurrentMonster.RewardXp;
-
+            RaiseMessage($"You received {CurrentMonster.RewardXp} experience");
             RaiseMessage($"You also find {CurrentMonster.Hairballs} hairballs!");
+            
+            CurrentPlayer.AddXp(CurrentMonster.RewardXp);
             CurrentPlayer.RecieveHairballs(CurrentMonster.Hairballs);
 
             foreach (var item in CurrentMonster.Inventory)
@@ -288,6 +292,13 @@ namespace Core.ViewModels
                 RaiseMessage($"You received {item.Name}");
                 CurrentPlayer.AddItemToInventory(item);
             }
+        }
+
+        private void OnCurrentPlayerLevelUp(object sender, System.EventArgs eventArgs)
+        {
+            RaiseMessage("");
+            RaiseMessage("Your might has grown!");
+            RaiseMessage($"You are level {CurrentPlayer.Level} now!");
         }
 
         public enum Directions

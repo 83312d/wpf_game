@@ -6,14 +6,23 @@ namespace Core.Models
 {
     public class Location
     {
-        public int XAxis { get; set; }
-        public int YAxis { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Picture { get; set; }
-        public List<Quest> AvailableQuests { get; set; } = new List<Quest>();
-        public List<MonsterEncounter> Monsters { get; set; } = new List<MonsterEncounter>();
+        public int XAxis { get; }
+        public int YAxis { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public string Picture { get; }
+        public List<Quest> AvailableQuests { get; } = new List<Quest>();
+        public List<MonsterEncounter> Monsters { get; } = new List<MonsterEncounter>();
         public Trader Trader { get; set; }
+
+        public Location(int xAxis, int yAxis, string name, string description, string picture)
+        {
+            XAxis = xAxis;
+            YAxis = yAxis;
+            Name = name;
+            Description = description;
+            Picture = picture;
+        }
 
         public void AddMonster(int monsterId, int chanceOfEncounter)
         {
