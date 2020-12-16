@@ -45,7 +45,7 @@ namespace Core.Models
         {
             return items.All(item => 
                 Inventory.Count(i => 
-                    i.ItemTypeID == item.ItemID) >= item.Quantity);
+                    i.ItemId == item.ItemID) >= item.Quantity);
         }
 
         public void AddXp(int amount)

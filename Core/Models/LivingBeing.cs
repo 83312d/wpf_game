@@ -124,12 +124,12 @@ namespace Core.Models
             }
             else
             {
-                if (!GroupedInventory.Any(ig => ig.Item.ItemTypeID == item.ItemTypeID))
+                if (!GroupedInventory.Any(ig => ig.Item.ItemId == item.ItemId))
                 {
                     GroupedInventory.Add(new GroupedInventory(item,0));
                 }
 
-                GroupedInventory.First(ig => ig.Item.ItemTypeID == item.ItemTypeID).Quantity++;
+                GroupedInventory.First(ig => ig.Item.ItemId == item.ItemId).Quantity++;
             }
             
             OnPropertyChanged(nameof(Weapons));
@@ -141,7 +141,7 @@ namespace Core.Models
 
             GroupedInventory itemToRemove = item.Unique
                 ? GroupedInventory.FirstOrDefault(gi => gi.Item == item)
-                : GroupedInventory.FirstOrDefault(gi => gi.Item.ItemTypeID == item.ItemTypeID);
+                : GroupedInventory.FirstOrDefault(gi => gi.Item.ItemId == item.ItemId);
 
             if (itemToRemove != null)
             {

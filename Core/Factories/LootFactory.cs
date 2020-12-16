@@ -33,7 +33,7 @@ namespace Core.Factories
             StandartLoot.Add(new Item(Item.ItemCategory.Weapon, id, name, price, true, minDamage, maxDamage));
         }
 
-        public static Item CreateLoot(int itemTypeId) => StandartLoot.FirstOrDefault(item => item.ItemTypeID == itemTypeId)?.Clone();
+        public static Item CreateLoot(int itemTypeId) => StandartLoot.FirstOrDefault(item => item.ItemId == itemTypeId)?.Clone();
 
     }
 }

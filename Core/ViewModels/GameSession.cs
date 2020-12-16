@@ -182,7 +182,7 @@ namespace Core.ViewModels
                             for (int i = 0; i < itemQuantity.Quantity; i++)
                             {
                                 CurrentPlayer.RemoveItemFromInventory(CurrentPlayer.Inventory.First(item => 
-                                    item.ItemTypeID == itemQuantity.ItemID));
+                                    item.ItemId == itemQuantity.ItemID));
                             }
                         }
                         
