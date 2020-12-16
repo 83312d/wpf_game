@@ -36,7 +36,7 @@ namespace Core.ViewModels
                 }                
             }
         }
-        public Weapon CurrentWeapon { get; set; }
+        public Item CurrentWeapon { get; set; }
         public bool HasMonster => CurrentMonster != null;
         public bool HasTrader => CurrentTrader != null;    
         public bool HasNorthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis + 1) != null;

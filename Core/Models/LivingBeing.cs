@@ -60,7 +60,8 @@ namespace Core.Models
         }
         public ObservableCollection<Item> Inventory { get; }
         public ObservableCollection<GroupedInventory> GroupedInventory { get; }
-        public List<Item> Weapons => Inventory.Where(i => i is Weapon).ToList();
+        public List<Item> Weapons 
+            => Inventory.Where(i => i.Category == Item.ItemCategory.Weapon).ToList();
         public bool Defeated => CurrentHitPoints <= 0;
         public event EventHandler OnDefeat;
 
