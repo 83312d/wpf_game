@@ -263,8 +263,8 @@ namespace Core.ViewModels
         {
             RaiseMessage("");
             RaiseMessage("Oh, no!");
-            RaiseMessage($"The {CurrentMonster.Name} defeats you...");
-
+            if(CurrentMonster != null) RaiseMessage($"The {CurrentMonster.Name} defeats you...");
+           
             CurrentLocation = World.LocationAt(0, -1);
             CurrentPlayer.Heal(CurrentPlayer.MaxHitPoints);
             
