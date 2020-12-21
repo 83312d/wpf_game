@@ -12,6 +12,7 @@ namespace Core.Models
         private int _maxHitPoints;
         private int _hairballs;
         private int _level;
+        private Item _currentWeapon;
 
         public string Name
         {
@@ -58,11 +59,32 @@ namespace Core.Models
                 OnPropertyChanged();
             }
         }
+        public Item CurrentWeapon
+        {
+            get => _currentWeapon;
+            set
+            {
+                if(_currentWeapon != null)
+                {
+                    _currentWeapon.Action.OnActionDo -= RaiseOnActionDoEvent;
+                }
+ 
+                _currentWeapon = value;
+ 
+                if (_currentWeapon != null)
+                {
+                    _currentWeapon.Action.OnActionDo += RaiseOnActionDoEvent;
+                }
+ 
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<Item> Inventory { get; }
         public ObservableCollection<GroupedInventory> GroupedInventory { get; }
         public List<Item> Weapons 
             => Inventory.Where(i => i.Category == Item.ItemCategory.Weapon).ToList();
         public bool Defeated => CurrentHitPoints <= 0;
+        public event EventHandler<string> OnActionDo;
         public event EventHandler OnDefeat;
 
         protected LivingBeing(string name, int maxHitPoints, int currentHitPoints, int hairballs, int level = 1)
@@ -76,15 +98,19 @@ namespace Core.Models
             GroupedInventory = new ObservableCollection<GroupedInventory>();
         }
 
+        public void UseCurrentWeapon(LivingBeing target)
+        {
+            CurrentWeapon.DoAction(this, target);
+        }
+
         public void TakeDamage(int damage)
         {
             CurrentHitPoints -= damage;
 
-            if (Defeated)
-            {
-                CurrentHitPoints = 0;
-                RaiseOnDeathEvent();
-            }
+            if (!Defeated) return;
+            
+            CurrentHitPoints = 0;
+            RaiseOnDefeatEvent();
         }
 
         public void Heal(int amount)
@@ -99,7 +125,7 @@ namespace Core.Models
             }
         }
 
-        public void RecieveHairballs(int amount)
+        public void ReceiveHairballs(int amount)
         {
             Hairballs += amount;
         }
@@ -124,7 +150,7 @@ namespace Core.Models
             }
             else
             {
-                if (!GroupedInventory.Any(ig => ig.Item.ItemId == item.ItemId))
+                if(!GroupedInventory.Any(gi => gi.Item.ItemId == item.ItemId))
                 {
                     GroupedInventory.Add(new GroupedInventory(item,0));
                 }
@@ -158,9 +184,14 @@ namespace Core.Models
             OnPropertyChanged(nameof(Weapons));
         }
 
-        private void RaiseOnDeathEvent()
+        private void RaiseOnDefeatEvent()
         {
             OnDefeat?.Invoke(this, new System.EventArgs());
+        }
+
+        private void RaiseOnActionDoEvent(object sender, string result)
+        {
+            OnActionDo?.Invoke(this, result);
         }
     }
 }

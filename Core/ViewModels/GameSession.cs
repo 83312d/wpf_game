@@ -25,22 +25,23 @@ namespace Core.ViewModels
                 {
                     _currentPlayer.OnLevelUp -= OnCurrentPlayerLevelUp;
                     _currentPlayer.OnDefeat -= OnCurrentPlayerDefeat;
+                    _currentPlayer.OnActionDo -= OnCurrentPlayerDoAction;
                 }
-                
+
                 _currentPlayer = value;
                 
                 if (_currentPlayer != null)
                 {
                     _currentPlayer.OnLevelUp += OnCurrentPlayerLevelUp;
                     _currentPlayer.OnDefeat += OnCurrentPlayerDefeat;
-                }                
+                    _currentPlayer.OnActionDo += OnCurrentPlayerDoAction;
+                }
             }
         }
-        public Item CurrentWeapon { get; set; }
+
         public bool HasMonster => CurrentMonster != null;
         public bool HasTrader => CurrentTrader != null;    
         public bool HasNorthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis + 1) != null;
-
         public bool HasEastLocation => World.LocationAt(CurrentLocation.XAxis + 1, CurrentLocation.YAxis) != null;
         public bool HasWestLocation => World.LocationAt(CurrentLocation.XAxis - 1, CurrentLocation.YAxis) != null;
         public bool HasSouthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis - 1) != null;
@@ -151,7 +152,7 @@ namespace Core.ViewModels
             );
             
             player.AddItemToInventory(LootFactory.CreateLoot(1001));
-            
+
             return player;
         }
 
@@ -193,7 +194,7 @@ namespace Core.ViewModels
                         RaiseMessage($"You receive {quest.RewardHairballs} hairballs");
                         
                         CurrentPlayer.AddXp(quest.RewardXP);
-                        CurrentPlayer.RecieveHairballs(quest.RewardHairballs);
+                        CurrentPlayer.ReceiveHairballs(quest.RewardHairballs);
                         
                         foreach (var itemQuantity in quest.RewardLoot)
                         {
@@ -209,35 +210,15 @@ namespace Core.ViewModels
             }
         }
 
-        private void MonstersAtLocation()
-        {
-            CurrentMonster = CurrentLocation.GetMonster();
-        }
-
-        private void RaiseMessage(string message)
-        {
-            OnMessageRaised?.Invoke(this, new MessagesEventArgs(message));
-        }
-
         public void AttackCurrentMonster()
         {
-            if (CurrentWeapon == null)
+            if (CurrentPlayer.CurrentWeapon == null)
             {
                 RaiseMessage("Nothing to attack with! :(");
                 return;
             }
 
-            int damageToMonster = GodOfRandom.NumberBetween(CurrentWeapon.MinDamage, CurrentWeapon.MaxDamage);
-
-            if (damageToMonster == 0)
-            {
-                RaiseMessage($"You missed!");
-            }
-            else
-            {
-                RaiseMessage($"You hit the{CurrentMonster.Name} for {damageToMonster}");
-                CurrentMonster.TakeDamage(damageToMonster);
-            }
+            CurrentPlayer.UseCurrentWeapon(CurrentMonster);
 
             if (CurrentMonster.Defeated)
             {
@@ -285,7 +266,7 @@ namespace Core.ViewModels
             RaiseMessage($"You also find {CurrentMonster.Hairballs} hairballs!");
             
             CurrentPlayer.AddXp(CurrentMonster.RewardXp);
-            CurrentPlayer.RecieveHairballs(CurrentMonster.Hairballs);
+            CurrentPlayer.ReceiveHairballs(CurrentMonster.Hairballs);
 
             foreach (var item in CurrentMonster.Inventory)
             {
@@ -300,6 +281,15 @@ namespace Core.ViewModels
             RaiseMessage("Your might has grown!");
             RaiseMessage($"You are level {CurrentPlayer.Level} now!");
         }
+        
+        private void MonstersAtLocation() 
+            => CurrentMonster = CurrentLocation.GetMonster();
+
+        private void RaiseMessage(string message) 
+            => OnMessageRaised?.Invoke(this, new MessagesEventArgs(message));
+        
+        private void OnCurrentPlayerDoAction(object sender, string result) 
+            => RaiseMessage(result);
 
         public enum Directions
         {

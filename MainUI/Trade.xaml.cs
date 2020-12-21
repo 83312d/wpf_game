@@ -29,7 +29,7 @@ namespace MainUI
             {
                 if (Session.CurrentPlayer.Hairballs >= groupedInventory.Item.Price)
                 {
-                    Session.CurrentPlayer.RecieveHairballs(groupedInventory.Item.Price);
+                    Session.CurrentPlayer.ReceiveHairballs(groupedInventory.Item.Price);
                     Session.CurrentPlayer.AddItemToInventory(groupedInventory.Item);
                     Session.CurrentTrader.RemoveItemFromInventory(groupedInventory.Item);
                 }

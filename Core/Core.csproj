@@ -39,6 +39,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AbstractNotifyClass.cs" />
+        <Compile Include="Actions\AttackWithWeapon.cs" />
         <Compile Include="EventArgs\MessagesEventArgs.cs" />
         <Compile Include="Factories\LootFactory.cs" />
         <Compile Include="Factories\MonsterFactory.cs" />

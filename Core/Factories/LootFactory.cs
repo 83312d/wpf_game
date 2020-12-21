@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Core.Actions;
 using Core.Models;
 
 namespace Core.Factories
@@ -30,7 +31,11 @@ namespace Core.Factories
         private static void BuildWeapon(int id, string name, int price,
                             int minDamage, int maxDamage)
         {
-            StandartLoot.Add(new Item(Item.ItemCategory.Weapon, id, name, price, true, minDamage, maxDamage));
+            var weapon = new Item(Item.ItemCategory.Weapon, id, name, price, true);
+            
+            weapon.Action = new AttackWithWeapon(weapon, minDamage, maxDamage);
+            
+            StandartLoot.Add(weapon);
         }
 
         public static Item CreateLoot(int itemTypeId) => StandartLoot.FirstOrDefault(item => item.ItemId == itemTypeId)?.Clone();

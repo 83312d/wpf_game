@@ -197,8 +197,9 @@
                 
                 <ComboBox Grid.Row="0" Grid.Column="0"
                           ItemsSource="{Binding CurrentPlayer.Weapons}"
-                          SelectedItem="{Binding CurrentWeapon}"
-                          DisplayMemberPath="Name"/>
+                          SelectedItem="{Binding CurrentPlayer.CurrentWeapon}" 
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="Id"/>
                 <Button Grid.Row="0" Grid.Column="2"
                         Content="Attack"
                         Click="OnClick_AttackMonster"/>

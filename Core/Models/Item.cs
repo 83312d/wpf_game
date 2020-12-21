@@ -1,4 +1,6 @@
-﻿namespace Core.Models
+﻿using Core.Actions;
+
+namespace Core.Models
 {
     public class Item
     {
@@ -15,24 +17,27 @@
         public string Name { get; }
         public int Price { get; }
         public bool Unique { get; }
-        public int MinDamage { get; }
-        public int MaxDamage { get; }
-
+        public AttackWithWeapon Action { get; set; }
+        
         public Item(ItemCategory category, int itemId, string name, int price, 
-                    bool unique = false, int minDamage = 0, int maxDamage = 0)
+                    bool unique = false, AttackWithWeapon action = null)
         {
             Category = category;
             ItemId = itemId;
             Name = name;
             Price = price;
             Unique = unique;
-            MinDamage = minDamage;
-            MaxDamage = maxDamage;
+            Action = action;
+        }
+
+        public void DoAction(LivingBeing actor, LivingBeing target)
+        {
+            Action?.Execute(actor, target);
         }
 
         public Item Clone()
         {
-            return new Item(Category, ItemId, Name, Price, Unique, MinDamage, MaxDamage);
+            return new Item(Category, ItemId, Name, Price, Unique, Action);
         }
     }
 }
