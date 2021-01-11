@@ -66,14 +66,14 @@ namespace Core.Models
             {
                 if(_currentWeapon != null)
                 {
-                    _currentWeapon.Action.OnActionDo -= RaiseOnActionDoEvent;
+                    _currentWeapon.Action.OnActionExecute -= RaiseOnActionExecuteEvent;
                 }
  
                 _currentWeapon = value;
  
                 if (_currentWeapon != null)
                 {
-                    _currentWeapon.Action.OnActionDo += RaiseOnActionDoEvent;
+                    _currentWeapon.Action.OnActionExecute += RaiseOnActionExecuteEvent;
                 }
  
                 OnPropertyChanged();
@@ -84,7 +84,7 @@ namespace Core.Models
         public List<Item> Weapons 
             => Inventory.Where(i => i.Category == Item.ItemCategory.Weapon).ToList();
         public bool Defeated => CurrentHitPoints <= 0;
-        public event EventHandler<string> OnActionDo;
+        public event EventHandler<string> OnActionExecute;
         public event EventHandler OnDefeat;
 
         protected LivingBeing(string name, int maxHitPoints, int currentHitPoints, int hairballs, int level = 1)
@@ -100,7 +100,7 @@ namespace Core.Models
 
         public void UseCurrentWeapon(LivingBeing target)
         {
-            CurrentWeapon.DoAction(this, target);
+            CurrentWeapon.ExecuteAction(this, target);
         }
 
         public void TakeDamage(int damage)
@@ -189,9 +189,9 @@ namespace Core.Models
             OnDefeat?.Invoke(this, new System.EventArgs());
         }
 
-        private void RaiseOnActionDoEvent(object sender, string result)
+        private void RaiseOnActionExecuteEvent(object sender, string result)
         {
-            OnActionDo?.Invoke(this, result);
+            OnActionExecute?.Invoke(this, result);
         }
     }
 }

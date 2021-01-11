@@ -17,10 +17,10 @@ namespace Core.Models
         public string Name { get; }
         public int Price { get; }
         public bool Unique { get; }
-        public AttackWithWeapon Action { get; set; }
+        public IAction Action { get; set; }
         
         public Item(ItemCategory category, int itemId, string name, int price, 
-                    bool unique = false, AttackWithWeapon action = null)
+                    bool unique = false, IAction action = null)
         {
             Category = category;
             ItemId = itemId;
@@ -30,7 +30,7 @@ namespace Core.Models
             Action = action;
         }
 
-        public void DoAction(LivingBeing actor, LivingBeing target)
+        public void ExecuteAction(LivingBeing actor, LivingBeing target)
         {
             Action?.Execute(actor, target);
         }

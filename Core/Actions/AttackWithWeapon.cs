@@ -3,13 +3,13 @@ using Core.Models;
 
 namespace Core.Actions
 {
-    public class AttackWithWeapon
+    public class AttackWithWeapon : IAction
     {
         private readonly Item _weapon;
         private readonly int _minDamage;
         private readonly int _maxDamage;
 
-        public event EventHandler<string> OnActionDo;
+        public event EventHandler<string> OnActionExecute;
 
         public AttackWithWeapon(Item weapon, int minDamage, int maxDamage)
         {
@@ -49,7 +49,7 @@ namespace Core.Actions
 
         private void ReportResult(string result)
         {
-            OnActionDo?.Invoke(this, result);
+            OnActionExecute?.Invoke(this, result);
         }
     }
 }

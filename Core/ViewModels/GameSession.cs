@@ -25,7 +25,7 @@ namespace Core.ViewModels
                 {
                     _currentPlayer.OnLevelUp -= OnCurrentPlayerLevelUp;
                     _currentPlayer.OnDefeat -= OnCurrentPlayerDefeat;
-                    _currentPlayer.OnActionDo -= OnCurrentPlayerDoAction;
+                    _currentPlayer.OnActionExecute -= OnCurrentPlayerDoAction;
                 }
 
                 _currentPlayer = value;
@@ -34,7 +34,7 @@ namespace Core.ViewModels
                 {
                     _currentPlayer.OnLevelUp += OnCurrentPlayerLevelUp;
                     _currentPlayer.OnDefeat += OnCurrentPlayerDefeat;
-                    _currentPlayer.OnActionDo += OnCurrentPlayerDoAction;
+                    _currentPlayer.OnActionExecute += OnCurrentPlayerDoAction;
                 }
             }
         }
