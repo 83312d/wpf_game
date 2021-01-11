@@ -36,13 +36,14 @@ namespace Core.Actions
         public void Execute(LivingBeing actor, LivingBeing target)
         {
             int damage = GodOfRandom.NumberBetween(_minDamage, _maxDamage);
+
             if (damage == 0)
             {
-                ReportResult("You missed");
+                ReportResult($"{actor.Name} missed");
             }
             else
             {
-                ReportResult($"You hit the {target.Name} for {damage}");
+                ReportResult($"{actor.Name} hit {target.Name} for {damage}");
                 target.TakeDamage(damage);
             }
         }

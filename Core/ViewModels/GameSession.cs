@@ -89,13 +89,15 @@ namespace Core.ViewModels
                 if (_currentMonster != null)
                 {
                     _currentMonster.OnDefeat -= OnCurrentMonsterDefeat;
+                    _currentMonster.OnActionExecute -= OnCurrentMonsterExecuteAction;
                 }
                 
                 _currentMonster = value;
 
-                if (CurrentMonster != null)
+                if (_currentMonster != null)
                 {
                     _currentMonster.OnDefeat += OnCurrentMonsterDefeat;
+                    _currentMonster.OnActionExecute += OnCurrentMonsterExecuteAction;
                     RaiseMessage("");
                     RaiseMessage("It's a trap!");
                     RaiseMessage($"{CurrentMonster.Name} here!");
@@ -234,18 +236,13 @@ namespace Core.ViewModels
             }
             else
             {
-                int damageToPlayer = GodOfRandom.NumberBetween(CurrentMonster.MinDamage, CurrentMonster.MaxDamage);
-
-                if (damageToPlayer == 0)
-                {
-                    RaiseMessage($"The {CurrentMonster.Name} misses you! Wow you are so fast!");
-                }
-                else
-                {
-                    RaiseMessage($"{CurrentMonster.Name} hits you for {damageToPlayer} points");
-                    CurrentPlayer.TakeDamage(damageToPlayer);
-                }
+                CurrentMonster.UseCurrentWeapon(CurrentPlayer);
             }
+        }
+
+        private void OnCurrentMonsterExecuteAction(object sender, string result)
+        {
+            RaiseMessage(result);
         }
 
         private void OnCurrentPlayerDefeat(object sender, System.EventArgs eventArgs)
