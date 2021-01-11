@@ -46,6 +46,14 @@ namespace Core.ViewModels
         public bool HasWestLocation => World.LocationAt(CurrentLocation.XAxis - 1, CurrentLocation.YAxis) != null;
         public bool HasSouthLocation => World.LocationAt(CurrentLocation.XAxis, CurrentLocation.YAxis - 1) != null;
 
+        public enum Directions
+        {
+            North,
+            West,
+            East,
+            South
+        }
+
         public GameSession()
         {
             World = WorldFactory.CreateWorld();
@@ -290,13 +298,5 @@ namespace Core.ViewModels
         
         private void OnCurrentPlayerDoAction(object sender, string result) 
             => RaiseMessage(result);
-
-        public enum Directions
-        {
-           North,
-           West,
-           East,
-           South
-        }
     }
 }
